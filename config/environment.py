@@ -1,0 +1,1 @@
+db_URI = 'postgresql://localhost:5432/todo_app'
