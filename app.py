@@ -12,6 +12,9 @@ db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
 from controllers import users_controllers
-
+from controllers import tasks_controllers
+from controllers import list_of_tasks_controllers
 
 app.register_blueprint(users_controllers.router, url_prefix="/api")
+app.register_blueprint(tasks_controllers.router, url_prefix="/api")
+app.register_blueprint(list_of_tasks_controllers.router, url_prefix="/api")

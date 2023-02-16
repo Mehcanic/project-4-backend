@@ -14,7 +14,6 @@ class TaskModel(db.Model, BaseModel):
     category = db.Column(db.String, nullable=False)
     date = db.Column(db.String, nullable=False)
     time = db.Column(db.String, nullable=False)
-
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     list_of_tasks_id = db.Column(
         db.Integer, db.ForeignKey("list_of_tasks.id"), nullable=False

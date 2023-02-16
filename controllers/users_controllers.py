@@ -7,7 +7,6 @@ from serializers.user_serializer import UserSchema
 
 user_schema = UserSchema()
 
-
 router = Blueprint("users_controllers", __name__)
 
 
@@ -26,7 +25,7 @@ def get_single_user(user_id):
 @router.route("/users", methods=["POST"])
 def create_user():
     user_dictionary = request.json
-    existing_user = UserModel.query.filter_by(email=user_dictionary['email']).first()
+    existing_user = UserModel.query.filter_by(email=user_dictionary["email"]).first()
 
     if existing_user:
         return {"message": "User already exists"}, HTTPStatus.BAD_REQUEST
@@ -37,9 +36,10 @@ def create_user():
     except ValidationError as e:
         return {
             "errors": e.messages,
-            "message": "Something went wrong when creating the user"
+            "message": "Something went wrong when creating the user",
         }, HTTPStatus.UNPROCESSABLE_ENTITY
     return user_schema.jsonify(user), HTTPStatus.CREATED
+
 
 # @router.route("/users", methods=["POST"])
 # def login():
@@ -54,3 +54,32 @@ def create_user():
 #     token = user.generate_token()
 
 #     return {"token": token, "message": "Successfully logged in"}, HTTPStatus.OK
+
+
+@router.route("/users/<int:user_id>", methods=["PUT"])
+def update_user(user_id):
+    user_dictionary = request.json
+    user = UserModel.query.get(user_id)
+
+    if not user:
+        return {"message": "User not found"}, HTTPStatus.NOT_FOUND
+
+    try:
+        user = user_schema.load(user_dictionary, instance=user, partial=True)
+        user.save()
+    except ValidationError as e:
+        return {
+            "errors": e.messages,
+            "message": "Something went wrong when updating the user",
+        }, HTTPStatus.UNPROCESSABLE_ENTITY
+    return user_schema.jsonify(user), HTTPStatus.OK
+
+
+@router.route("/users/<int:user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    user = UserModel.query.get(user_id)
+
+    if not user:
+        return {"message": "User not found"}, HTTPStatus.NOT_FOUND
+    user.delete()
+    return {"message": "User deleted successfully"}, HTTPStatus.OK
