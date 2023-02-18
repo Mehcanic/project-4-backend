@@ -1,10 +1,9 @@
 from app import ma
+from models.list_of_tasks_model import ListOfTasksModel
 
-from models.list_of_tasks_model import ListModel
 
-class ListSchema(ma.SLQAlchemyAutoSchema):
-
+class ListSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = ListModel
+        model = ListOfTasksModel
         load_instance = True
         include_fk = True

@@ -1,5 +1,4 @@
 from app import ma
-
 from models.task_model import TaskModel
 
 class TaskSchema(ma.SQLAlchemyAutoSchema):
