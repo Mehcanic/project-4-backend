@@ -8,9 +8,9 @@ from models.task_model import TaskModel
 
 class UserModel(db.Model, BaseModel):
     __tablename__ = "users"
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.Text, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, unique=True, nullable=True)
+    email = db.Column(db.Text, unique=True, nullable=True)
+    password = db.Column(db.String, nullable=True)
 
     task = db.relationship("TaskModel", back_populates="user")
     lists_of_tasks = db.relationship("ListOfTasksModel", back_populates="user")

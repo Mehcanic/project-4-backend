@@ -9,8 +9,8 @@ from models.task_model import TaskModel
 
 class ListOfTasksModel(db.Model, BaseModel):
     __tablename__ = "list_of_tasks"
-    name = db.Column(db.String, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    name = db.Column(db.String, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
     task = db.relationship("TaskModel", back_populates="lists_of_tasks")
     user = db.relationship("UserModel", back_populates="lists_of_tasks")

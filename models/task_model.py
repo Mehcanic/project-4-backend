@@ -9,14 +9,14 @@ from models.base import BaseModel
 class TaskModel(db.Model, BaseModel):
     __tablename__ = "tasks"
     name = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
-    status = db.Column(db.String, nullable=False)
-    category = db.Column(db.String, nullable=False)
-    date = db.Column(db.String, nullable=False)
-    time = db.Column(db.String, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    description = db.Column(db.String, nullable=True)
+    status = db.Column(db.String, nullable=True)
+    category = db.Column(db.String, nullable=True)
+    date = db.Column(db.String, nullable=True)
+    time = db.Column(db.String, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     list_of_tasks_id = db.Column(
-        db.Integer, db.ForeignKey("list_of_tasks.id"), nullable=False
+        db.Integer, db.ForeignKey("list_of_tasks.id"), nullable=True
     )
 
     user = db.relationship("UserModel", back_populates="task")

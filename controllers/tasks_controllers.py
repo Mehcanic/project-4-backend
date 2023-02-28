@@ -1,7 +1,8 @@
 from http import HTTPStatus
-from flask import Blueprint, request
+from flask import Blueprint, request, make_response, jsonify
 from marshmallow.exceptions import ValidationError
 
+# from flask_cors import cross_origin
 from models.task_model import TaskModel
 from serializers.task_serializer import TaskSchema
 
@@ -25,11 +26,9 @@ def get_single_task(task_id):
 @router.route("/users/tasks", methods=["POST"])
 def create_task():
     task_dictionary = request.json
-    existing_task = TaskModel.query.filter_by(name=task_dictionary["name"]).first()
-
-    if existing_task:
-        return {"message": "Task already exists"}, HTTPStatus.BAD_REQUEST
-
+    # existing_task = TaskModel.query.filter_by(name=task_dictionary["name"]).first()
+    # if existing_task:
+    #     return {"message": "Task already exists"}, HTTPStatus.BAD_REQUEST
     try:
         task = task_schema.load(task_dictionary)
         task.save()
@@ -70,7 +69,7 @@ def delete_task(task_id):
 
 
 # Create funtion to filter for tasks based on description or name
-@router.route("/users/tasks/<string:params>", methods=["GET"])
+@router.route("/users/search_tasks", methods=["GET"])
 def filter_tasks_by_params():
     try:
         name = request.args.get("name")
@@ -96,10 +95,11 @@ def filter_tasks_by_params():
             query = query.filter(TaskModel.time.ilike(f"{time}%"))
 
         tasks = query.all()
+
     except ValidationError as e:
         return {
             "errors": e.messages,
             "message": "Something went wrong when filtering the tasks",
         }, HTTPStatus.UNPROCESSABLE_ENTITY
-    return task_schema.jsonify(tasks, many=True), HTTPStatus.OK
 
+    return task_schema.jsonify(tasks, many=True), HTTPStatus.OK

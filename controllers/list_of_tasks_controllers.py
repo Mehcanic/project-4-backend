@@ -73,3 +73,21 @@ def delete_list_of_tasks(list_of_tasks_id):
         return {"message": "List of tasks not found"}, HTTPStatus.NOT_FOUND
     list_of_tasks.delete()
     return {"message": "List deleted seccesfully"}, HTTPStatus.NO_CONTENT
+
+
+@router.route("/users/search_lists/", methods=["GET"])
+def filter_lists_of_tasks():
+    try:
+        name = request.args.get("name")
+        query = ListOfTasksModel.query
+
+        if name:
+            query = query.filter(ListOfTasksModel.name.ilike(f"%{name}%"))
+
+        lists_of_tasks = query.all()
+    except ValidationError as e:
+        return {
+            "errors": e.messages,
+            "message": "Something went wrong when filtering the list of tasks",
+        }, HTTPStatus.UNPROCESSABLE_ENTITY
+    return list_of_tasks_schema.jsonify(lists_of_tasks, many=True), HTTPStatus.OK
